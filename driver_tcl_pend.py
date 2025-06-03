@@ -195,20 +195,7 @@ print("trainDat list length:",len(trainDat))
 print("trainDat[0] size:",trainDat[0].size())
 print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
 
-# just for checking
-# print('DRIVER min:',minv)
-# print('DRIVER ptp:',ptpv)
-# print("DRIVER trainDat[0]:",trainDat[0])
-# dum0 = ((trainDat[0] + 1)*ptpv)/2+minv   # scale back to original  
-# print("DRIVER dum0:",dum0)
-# #dum0 = trainDat[0].to(device)          
-# dum1 = torch.squeeze(dum0).to(device)
-# dum2 = torch.mm(torch.transpose(Qt,0,1),torch.transpose(dum1,0,1)) # shape: [2, batch] 
-# print('CHECKING dum2 size :', dum2.size())
-# Ek = (Itia*(dum2[1,:]**2))/2;  # kinetic energy, tensor of size [n_batch]
-# Ep = (mass*g)*(1-torch.cos(dum2[0,:]));  # potential energy, tensor of size [n_batch]             
-# E_tot = Ek + Ep; #total energy is expected to remain constant 
-# print('CHECKING E total: ', E_tot)
+
 
 del(trainDat)
 
@@ -251,9 +238,6 @@ weights, grads_before_clipping, grads_after_clipping, error_val, err_mean_val, s
 end_time = time.perf_counter()
 elapsed_time = end_time - start_time
 
-# print(f"*************************************************************")        
-# print(f"id(weights) as output of train function: {id(weights)}")   
-# print(f"*************************************************************") 
                     
 torch.save(model.state_dict(), args.folder + '/model'+'.pkl')
 
@@ -328,7 +312,6 @@ scipy.io.savemat(args.folder +'/con_loss.mat', dict(save_con_loss), appendmat=Tr
 # Prediction (Test Error)
 #******************************************************************************
 Xinput,_ = Xtest[:-1], Xtest[1:]
-#_, Xtarget = Xtest_clean[:-1], Xtest_clean[1:]
 _, Xtarget = Xtest_clean[:-1], Xtest_clean[1:]
 
 print('**** Save Xinput from driver ****')
@@ -343,11 +326,7 @@ snapshots_pred = []
 snapshots_truth = []
 
 print("Xinput size :",Xinput.size()) # tensor [test_samples,1,N_1,1]
-# print("===============================================================================")
-# print("===============================================================================")
-# print("Last element which is actually extrapolated:  Xinput[0] :",Xinput[1])
-# print("===============================================================================")
-# print("===============================================================================")            
+       
             
 # Test Error calculation code here        
 error_test = []
@@ -400,7 +379,7 @@ scipy.io.savemat(args.folder + '/snaps.mat', save_preds0, appendmat=True, format
 
 
 error_test = np.asarray(error_test) #error is a list of elements where each element is pred_steps by 1 array
-#print('error shape: ',error.shape)
+
 
 
 print('**** Save error_test from driver ****')
@@ -423,8 +402,6 @@ y2_test=np.quantile(error_test, .95, axis=0)
 y1_val=np.quantile(error_val, .05, axis=0)
 y2_val=np.quantile(error_val, .95, axis=0)
 
-#print('y1 type: ',type(y1))
-#print('y1 shape: ',y1.shape)
 
 np.save(args.folder +'/000_pred.npy', error_test)
 
@@ -449,7 +426,7 @@ scipy.io.savemat(args.folder +'/err_mean_val.mat', dict(save_var2), appendmat=Tr
 
 err_stats_test = np.array([err_min_test,err_mean_test,err_max_test, err_max_test-err_min_test])
 err_stats_val = np.array([err_min_val,err_mean_val,err_max_val, err_max_val-err_min_val])
-#print('err_stats0 type:',type(err_stats0))
+
     
 snapshots_pred_val = [pred.cpu().numpy() for pred in snapshots_pred_val]
 snapshots_truth_val = [truth.cpu().numpy() for truth in snapshots_truth_val]
@@ -478,7 +455,6 @@ scipy.io.savemat(args.folder +'/low_lim_arr.mat', dict(save_lowlim), appendmat=T
 
 
 
-#plt.close('all')
 #******************************************************************************
 # Eigenvalues
 #******************************************************************************
@@ -495,20 +471,13 @@ scipy.io.savemat(args.folder +'/koopman_eigvals.mat', dict(save_eigvals), append
 
 epoch_start = 1
 epoch_end = args.epochs-1
-#print(f"*************************************************************")        
-#print(f"id(weights) just before printing in driver: {id(weights)}")   
-#print(f"*************************************************************") 
-#print("weights at epoch 0 (inside driver after training):")
+
 for name, weight in weights[0].items():
     np.set_printoptions(threshold=10, edgeitems=2, linewidth=75, suppress=True)
-    # Directly print the shape of the numpy array
-    #print(f"epoch: {0}: {name}: {weight}")
     np.set_printoptions(edgeitems=3) 
 print("weights at epoch args.epochs-1 (inside driver after training):")
 for name, weight in weights[args.epochs-1].items():
     np.set_printoptions(threshold=10, edgeitems=2, linewidth=75, suppress=True)
-    # Directly print the shape of the numpy array
-    #print(f"epoch: {args.epochs-1}: {name}: {weight}")
     np.set_printoptions(edgeitems=3)  
     
     
