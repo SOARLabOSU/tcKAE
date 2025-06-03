@@ -36,9 +36,9 @@ parser.add_argument('--lr', type=float, default=1e-2, metavar='N', help='learnin
 #
 parser.add_argument('--wd', type=float, default=1e0, metavar='N', help='weight_decay (default: 1e-5)')
 #
-parser.add_argument('--epochs', type=int, default=10, metavar='N', help='number of epochs to train (default: 10)')
+parser.add_argument('--epochs', type=int, default=600, metavar='N', help='number of epochs to train (default: 10)')
 #
-parser.add_argument('--batch', type=int, default=40, metavar='N', help='batch size (default: 10000)')
+parser.add_argument('--batch', type=int, default=32, metavar='N', help='batch size (default: 10000)')
 #
 parser.add_argument('--folder', type=str, default='test',  help='specify directory to print results to')
 #
@@ -66,7 +66,7 @@ parser.add_argument('--bottleneck', type=int, default='16',  help='size of bottl
 #
 parser.add_argument('--lr_update', type=int, nargs='+', default=[30, 200, 400, 700], help='decrease learning rate at these epochs')
 #
-parser.add_argument('--lr_decay', type=float, default='0.2',  help='TCL penalty lambda hyperparameter')
+parser.add_argument('--lr_decay', type=float, default='0.5',  help='TCL penalty lambda hyperparameter')
 #
 parser.add_argument('--backward', type=int, default=1, help='flag for deciding to train with backward dynamics')
 #
